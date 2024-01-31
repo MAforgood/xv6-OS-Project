@@ -91,35 +91,20 @@ sys_uptime(void)
 }
 
 int
-sys_example(void)
+sys_clone(void)
 {
-  example();
-  return 0;
+  int fcn, arg1, arg2, stack;
+  if(argint(0, &fcn)<0 || argint(1, &arg1)<0 || argint(2, &arg2)<0 || argint(3, &stack)<0)
+    return -1;
+  return clone((void *)fcn, (void *)arg1, (void *)arg2, (void *)stack);
 }
 
-int sys_clone(void)
+int
+sys_join(void)
 {
-  int func_add;
-  int arg;
-  int stack_add;
-
-  if (argint(0, &func_add) < 0){
-    cprintf("Error! somthing wrong with the entry function");
-    return -1;
-  }
-  if (argint(1, &arg) < 0){
-    cprintf("Error! somthing wrong with the args");
-    return -1;
-  }
-  if (argint(2, &stack_add) < 0){
-    cprintf("Error! somthing wrong with the entry stack");
-    return -1;
-  }
-  return clone((void *)stack_add);
-  
-}
-
-int sys_join(void)
-{
-  return join();
+  void **stack;
+  int stackArg;
+  stackArg = argint(0, &stackArg);
+  stack = (void**) stackArg;
+  return join(stack);
 }
